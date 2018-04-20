@@ -15,9 +15,9 @@ string VinC_En(string msg,string newKey)
 string RSA_En(string msg,string key)
 {
     My_namespace::RSA R(key);
-    string encryptedMsg="";
-    for(int i=0; i<msg.length(); ++i)
-        encryptedMsg += (char )R.Encrypt(msg.at(i));
+    string encryptedMsg;
+    for(char i:msg)
+        encryptedMsg += R.Encrypt(i);
     return encryptedMsg;
 }
 

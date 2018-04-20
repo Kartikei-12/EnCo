@@ -3,11 +3,9 @@
 #include<string>
 #include<ctype.h>
 #include<conio.h>
-#include<list>
 #include<locale.h>
 #include<algorithm>
 #include<windows.h>
-#include<math.h>
 #include<vector>
     using namespace std;
 #include"My_general.h"
@@ -15,28 +13,24 @@
 #include"InProcessor.h"
 #include"OutProcessor.h"
 
-
 int main(int argc, char *argv[])
 try {
     cout<<"\nHiiii";
     string key=argv[1];
+    
     string msg="AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789~`!@#$^&*()_+=-{}|:<>?[];',./" ;
     My_namespace::RSA R(key);
-    /*
-    string enMsg="";
+    //string Output = RSA_En( VinC_En(msg,My_namespace::V_KeyG(key,max_buffer_size)) ,key);
+    //string Output1 = VinC_Dy( RSA_Dy(Output,key) ,My_namespace::V_KeyG(key,max_buffer_size));
     
+    string Output = RSA_Dy(RSA_En(msg,key),key);
+    int j=0;
     for(int i=0; i<msg.length(); ++i)
-        enMsg += (char )R.Encrypt(msg.at(i));
-
-    string deMsg="";
-    for(int i=0; i<enMsg.length(); ++i)
-        deMsg += (char )R.Decrypt(enMsg.at(i));
-    size_t ghj=0;
-    for(int i=0; i<msg.length(); ++i)
-        if(msg.at(i) != deMsg.at(i))
-            //cerr<<"\n"<<msg.at(i)<<" "<<(int )msg.at(i)<<" "<<deMsg.at(i)<<" KK";
-            ghj++;
-    cout<<"\n"<<ghj;*/
+        if(msg.at(i) != Output.at(i) )
+            ++j;
+    cout<<"\n\nasd:"<<j;
+    cout<<"\n:"<< (char )R.Decrypt(R.Encrypt('b')); 
+    
     return 0;
 }
 catch( My_ERROR E )
