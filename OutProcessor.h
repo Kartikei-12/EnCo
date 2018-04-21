@@ -15,7 +15,7 @@ string VinC_Dy(string encryptedMsg,string newKey)
 string RSA_Dy(string enMsg,string key)
 {
     My_namespace::RSA R(key);
-    string decryptedMsg;
+    string decryptedMsg = "";
     for(char i:enMsg)
         decryptedMsg += R.Decrypt(i);
     return decryptedMsg;
