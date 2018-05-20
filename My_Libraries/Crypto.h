@@ -6,7 +6,7 @@ namespace My_namespace
         void Parameter_Generator()
         {            
             modulas_n = prime_1 * prime_2;
-            totient = My_namespace::LCM((prime_1-1) , (prime_2-1)) ;
+            totient = LCM((prime_1-1) , (prime_2-1)) ;
             pu_K = 2;
             while(__gcd(pu_K,totient)!=1)
                 ++pu_K;
@@ -23,7 +23,7 @@ namespace My_namespace
         {
             bool satisfied = false;
             size_t failure = 10;//Random integer greater than 0
-            vector<int > SE = My_namespace::getSieveOfEratosthenes(2*(a+b));
+            vector<int > SE = getSieveOfEratosthenes(2*(a+b));
             for(int j=0; (j<(SE.size()-2)) && !satisfied; ++j)
                 for(int k=j+2; (k<(SE.size()-1)) && !satisfied; ++k)
                 {
@@ -33,7 +33,7 @@ namespace My_namespace
                     Parameter_Generator();
                     string msg1="AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789~`!@#$^&*()_+=-{}|:<>?[];',./" ;
                     for(char i:msg1)
-                        if(i != My_namespace::mod_Exp( My_namespace::mod_Exp(i,pu_K, modulas_n) , pr_K, modulas_n) )
+                        if(i != mod_Exp( mod_Exp(i,pu_K, modulas_n) , pr_K, modulas_n) )
                             ++failure;
                     if(failure==0 && modulas_n<256 && modulas_n>100)
                         satisfied = true;
@@ -45,23 +45,23 @@ namespace My_namespace
             RSA_Generator( KEY.at(0) , KEY.at(1) );
         }
         auto charEncrypt(auto data) {
-            return My_namespace::mod_Exp(data,pu_K, modulas_n);
+            return mod_Exp(data,pu_K, modulas_n);
         }
         auto charDecrypt(auto enMsge) {
-            return My_namespace::mod_Exp(enMsge,pr_K, modulas_n);
+            return mod_Exp(enMsge,pr_K, modulas_n);
         }
         string stringEncrypt(string msg)
         {
             string encryptedMsg = "";
             for(char i:msg)
-                encryptedMsg += My_namespace::mod_Exp(i,pu_K, modulas_n);
+                encryptedMsg += mod_Exp(i,pu_K, modulas_n);
             return encryptedMsg;
         }
         string stringDecrypt(string enMsg)
         {
             string decryptedMsg = "";
             for(char i:enMsg)
-                decryptedMsg += My_namespace::mod_Exp(i,pr_K, modulas_n);
+                decryptedMsg += mod_Exp(i,pr_K, modulas_n);
             return decryptedMsg;
         }
     };
@@ -70,7 +70,8 @@ namespace My_namespace
     {
         string Key;
     public:
-        Vigenere_Cypher(string a) {
+        Vigenere_Cypher(string a) 
+        {
             Key = a;
             a.clear();
             for(char i:Key)
@@ -79,6 +80,7 @@ namespace My_namespace
                         a += i;
                     else
                         a += toupper(i);
+            Key.clear();
             Key = a;
         }
         string Encrypt(string msg)
@@ -88,22 +90,23 @@ namespace My_namespace
             for(uint32_t i=0; i<mLength; ++i)
                 if(isalpha(msg.at(i)))
                     if(isupper(msg.at(i)))
-                        encryptedMsg += (char )((msg.at(i) + Key.at(i%mLength)) % 26) + 'A' ;
+                        encryptedMsg += (char )(( msg.at(i) + Key.at(i%mLength) ) % 26) + 'A' ;
                     else
-                        encryptedMsg += (char )((msg.at(i) + Key.at(i%mLength) + 'A' - 'a' ) % 26) + 'a';
+                        encryptedMsg += (char )(( msg.at(i) + Key.at(i%mLength) + 'A' - 'a' ) % 26) + 'a';
                 else
                     encryptedMsg += msg.at(i);
             return encryptedMsg;
         }
-        string Decrypt(string enMsg)
+        string Decrypt(string encryptedMsg)
         {
+            size_t mLength = encryptedMsg.length();
             string decryptedMsg="";
-            for(uint32_t i = 0; i < encryptedMsg.length(); ++i)
+            for(uint32_t i = 0; i<mLength; ++i)
                 if(isalpha(encryptedMsg.at(i)))
                     if(isupper(encryptedMsg.at(i)))
-                        decryptedMsg += (char )(( encryptedMsg.at(i) - Key.at(i%mLength)) + 'a' - 'A' - 6 ) % 26) + 'A';
+                        decryptedMsg += (char )(( encryptedMsg.at(i) - Key.at(i%mLength) + 'a' - 'A' - 6 ) % 26) + 'A';
                     else
-                        decryptedMsg += (char )(( encryptedMsg.at(i) - Key.at(i%mLength)) - 6 ) % 26) + 'a';
+                        decryptedMsg += (char )(( encryptedMsg.at(i) - Key.at(i%mLength) - 6 ) % 26) + 'a';
                 else
                     decryptedMsg += encryptedMsg.at(i);
             return decryptedMsg;
