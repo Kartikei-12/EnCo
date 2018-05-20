@@ -1,6 +1,6 @@
 namespace My_namespace
 {
-    class RSA_Cryptografhy
+    class RSA
     {
         int32_t prime_1, prime_2, totient, pu_K, modulas_n, pr_K;
         void Parameter_Generator()
@@ -41,6 +41,7 @@ namespace My_namespace
         }
         
     public:
+        RSA() {;}
         RSA(string KEY) {
             RSA_Generator( KEY.at(0) , KEY.at(1) );
         }
@@ -70,6 +71,7 @@ namespace My_namespace
     {
         string Key;
     public:
+        Vigenere_Cypher() {;}
         Vigenere_Cypher(string a) 
         {
             Key = a;

@@ -16,14 +16,33 @@
 
 class Programm
 {
-    string inputName,outputName,fileExtension;
+    string inputName,outputName,fileExtension,Out_nameExtension;
     My_namespace::Project_Parameter WorkP;
+    My_namespace::Vigenere_Cypher V;
+    My_namespace::RSA R;
 public:
     Programm(My_namespace::Project_Parameter PP)
     {
         WorkP = PP;
-        inputName = WorkP.workFile;
-        cout<<"\n\n\nHiiii\nListen to bhaiya Gungun!!";
+        R(WorkP.key);
+        Vigenere_Cypher(WorkP.key);
+        //Preparing I/O file names and such
+        fileExtension = WorkP.workFile.substr(WorkP.workFile.rfind('.'));
+        inputName.assign( WorkP.workFile.begin(), WorkP.workFile.begin()+WorkP.workFile.rfind('.') );
+        
+        Out_nameExtension.clear();
+        if(WorkP.isEncrypt)
+            Out_nameExtension += "_e";
+        else
+            Out_nameExtension += "_d";
+        if(WorkP.isCompress)
+            Out_nameExtension += "_com";
+        if(WorkP.isDecompress)
+            Out_nameExtension += "_decom";
+
+        outputName = inputName + Out_nameExtension + fileExtension;
+        
+        cout<<"\n\n\nHiiii\nExtension:"<<fileExtension;
     }
 };
 
@@ -43,12 +62,12 @@ try
     Programm P(PP);
     
     Hist<<now->tm_mday<<"/"
-            <<(now->tm_mon + 1)<<"/"
-            <<(now->tm_year + 1900)<<" "
-            <<"Time: "
-            <<"";
+        <<(now->tm_mon + 1)<<"/"
+        <<(now->tm_year + 1900)<<" "
+        <<"Time: "
+        <<"";
     stop_s = clock();
-    Hist<<(((stop_s-start_s)/double(CLOCKS_PER_SEC)) + 1);
+    Hist<<(((stop_s-start_s)/double(CLOCKS_PER_SEC)) + 1)<<" sec\n";
     Hist.close();
     return 0;
 }
@@ -73,6 +92,7 @@ catch(My_ERROR E)
             break;
         case Invalid_Arguments:
             cerr<<"Invalid_Aguments";
+            break;
         default:
             cerr<<"Unknown Exception by me.";
     }

@@ -14,7 +14,7 @@ namespace My_namespace
     class Project_Parameter
     {
     public:
-        bool isEncrpt=false, isDecrypt=false, isCompress=false, isDecompress=false, isFileFound=false, isKeyFound=false;
+        bool isEncrypt=false, isDecrypt=false, isCompress=false, isDecompress=false, isFileFound=false, isKeyFound=false;
         size_t no_Argument;
         string workFile,key;
         Project_Parameter() {;}
@@ -26,7 +26,7 @@ namespace My_namespace
             {
                 i = command[j];
                 if(i == "-e")
-                    isEncrpt = true;
+                    isEncrypt = true;
                 if(i == "-d")
                     isDecrypt = true;
                 if(i == "-com")
@@ -51,11 +51,12 @@ namespace My_namespace
             if(
                 !isKeyFound                                  ||
                 !isFileFound                                 ||
-                (isEncrpt && isDecrypt)                      ||
+                (isEncrypt && isDecrypt)                     ||
                 (isCompress && isDecompress)                 ||
                 (isDecrypt && (isCompress || isDecompress))  || 
                 !(no_Argument==6 || no_Argument==7)          || 
-                (!isEncrpt && !isDecrypt)                    || false
+                (!isEncrypt && !isDecrypt)                   ||
+                false
             )
                 throw Invalid_Arguments;
         }
