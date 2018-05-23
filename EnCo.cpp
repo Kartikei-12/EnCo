@@ -3,6 +3,7 @@
 #include<iostream>
 #include<fstream>
 #include<string>
+#include<exception>
 #include<iomanip>
 #include<algorithm>
 #include<locale>
@@ -19,13 +20,9 @@
 class Programm
 {
     string inputName,outputName,tempName,fileExtension,Out_nameExtended;
-
-    My_namespace::Project_Parameter WorkP;
 public:
-    Programm(My_namespace::Project_Parameter PP)
+    Programm(My_namespace::Project_Parameter WorkP)
     {
-        //Initializing work classes;
-        WorkP = PP;
         //Preparing I/O file names and such
         fileExtension = WorkP.workFile.substr(WorkP.workFile.rfind('.'));
         inputName.assign( WorkP.workFile.begin(), WorkP.workFile.begin()+WorkP.workFile.rfind('.') );
@@ -40,18 +37,13 @@ public:
         if(WorkP.isDecompress)
             Out_nameExtended += "_decom";
         outputName = inputName + Out_nameExtended + fileExtension;
+        inputName = WorkP.workFile;
         //I/O files names done//Files opened
         //Doing work
         if(WorkP.isEncrypt)
-        {
-            cout<<"\n\n\nHiiii\nExtension:"<<WorkP.isEncrypt;
-            //My_namespace::Cryptografhy();
-        }
+            My_namespace::Cryptografhy_function(inputName,outputName,WorkP.key,!WorkP.isEncrypt);
         else
-        {
-            cout<<"\nfgh";
-        }
-        cout<<"\nasd";
+            My_namespace::Cryptografhy_function(inputName,outputName,WorkP.key,WorkP.isDecrypt);
     }
 };
 
@@ -59,9 +51,9 @@ int main(int argc, char *argv[])
 try
 {
     uint64_t start_s = clock(), stop_s=0;
-    ofstream Hist( "History.txt" , ios::out |ios::app);
     time_t t = time(0);
     struct tm *now = localtime(&t);
+    ofstream Hist( "History.txt" , ios::out |ios::app);
     My_namespace::Project_Parameter PP(argv,argc);
     
     setlocale(LC_ALL,"en_Us.utf8");
@@ -76,7 +68,9 @@ try
         <<"Time: "
         <<"";
     stop_s = clock();
-    Hist<<(((stop_s-start_s)/double(CLOCKS_PER_SEC)) + 1)<<" sec\n";
+    Hist<<(((stop_s-start_s)/double(CLOCKS_PER_SEC)) + 1)
+        <<" sec Speed:"
+        <<(double )(My_namespace::FileSize(PP.workFile)/( 1024 * (((stop_s-start_s)/double(CLOCKS_PER_SEC)) + 1)))<<"\n";
     Hist.close();
     return 0;
 }
@@ -110,8 +104,12 @@ catch(My_ERROR E)
     }
     cerr<<"\nTry:\n./EnCo.exe -file FILE_NAME -key KEY -e -c";
 }
+catch(exception& e)
+{
+    cerr<<endl<<e.what();
+}
 catch(...)
 {
     cerr<<"Unknown Exception.\n";
-    cerr<<"\nTry:\n./EnCo.exe -file FILE_NAME -key KEY -e -c";
+    cerr<<"\nTry:\n./EnCo.exe -file FILE_NAME -key KEY -e -com";
 }

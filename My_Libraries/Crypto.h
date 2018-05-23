@@ -41,14 +41,16 @@ namespace My_namespace
         }
         
     public:
-        RSA() {;}
+        RSA() {
+            ;
+        }
         RSA(string KEY) {
             RSA_Generator( KEY.at(0) , KEY.at(1) );
         }
-        auto charEncrypt(auto data) {
+        char charEncrypt(size_t data) {
             return mod_Exp(data,pu_K, modulas_n);
         }
-        auto charDecrypt(auto enMsge) {
+        char charDecrypt(size_t enMsge) {
             return mod_Exp(enMsge,pr_K, modulas_n);
         }
         string stringEncrypt(string msg)
@@ -76,41 +78,34 @@ namespace My_namespace
         }
         Vigenere_Cypher(string a) 
         {
-            Key = a;
-            a.clear();
-            for(char i:Key)
-                if(isalpha(i))
-                    if(isupper(i))
-                        a += i;
-                    else
-                        a += toupper(i);
-            Key.clear();
-            Key = a;
+            for(int i=0; i<a.length(); ++i)
+                if(isalpha(a.at(i)))
+                    Key += toupper(a.at(i));
         }
         string Encrypt(string msg)
         {
-            size_t mLength = msg.length();
-            string encryptedMsg="";
-            for(uint32_t i=0; i<mLength; ++i)
+            size_t kLength = Key.length();
+            string encryptedMsg;
+            for(int i=0; i<msg.length(); ++i)
                 if(isalpha(msg.at(i)))
                     if(isupper(msg.at(i)))
-                        encryptedMsg += (char )(( msg.at(i) + Key.at(i%mLength) ) % 26) + 'A' ;
+                        encryptedMsg += (char )(( msg.at(i) + Key.at(i%kLength) ) % 26) + 'A' ;
                     else
-                        encryptedMsg += (char )(( msg.at(i) + Key.at(i%mLength) + 'A' - 'a' ) % 26) + 'a';
+                        encryptedMsg += (char )(( msg.at(i) + Key.at(i%kLength) + 'A' - 'a' ) % 26) + 'a';
                 else
                     encryptedMsg += msg.at(i);
             return encryptedMsg;
         }
         string Decrypt(string encryptedMsg)
         {
-            size_t mLength = encryptedMsg.length();
-            string decryptedMsg="";
-            for(uint32_t i = 0; i<mLength; ++i)
+            size_t kLength = Key.length();
+            string decryptedMsg;
+            for(int i = 0; i<encryptedMsg.length(); ++i)
                 if(isalpha(encryptedMsg.at(i)))
                     if(isupper(encryptedMsg.at(i)))
-                        decryptedMsg += (char )(( encryptedMsg.at(i) - Key.at(i%mLength) + 'a' - 'A' - 6 ) % 26) + 'A';
+                        decryptedMsg += (char )(( encryptedMsg.at(i) - Key.at(i%kLength) + 'a' - 'A' - 6 ) % 26) + 'A';
                     else
-                        decryptedMsg += (char )(( encryptedMsg.at(i) - Key.at(i%mLength) - 6 ) % 26) + 'a';
+                        decryptedMsg += (char )(( encryptedMsg.at(i) - Key.at(i%kLength) - 6 ) % 26) + 'a';
                 else
                     decryptedMsg += encryptedMsg.at(i);
             return decryptedMsg;
@@ -120,39 +115,39 @@ namespace My_namespace
     void Cryptografhy_function(string& inputName,string& outputName,string& key, bool WhatToDo)
     {
         //Opening required files
+        char temporary_Char='.';
+        uint64_t fileSize = FileSize(inputName),coun=0,track=0;
+        string buffer, buffer1;
         fstream iFile,oFile;
+        RSA R(key);
+        Vigenere_Cypher V(key);
+        
         iFile.open(inputName.c_str(), ios::in | ios::binary);
         if(!iFile.is_open())
             throw Cannot_Open_File;
         if(ifstream(outputName.c_str()))
             throw Output_File_Exist;
-        oFile.open(outputName.c_str(), ios::out | ios::binary | ios::trunc);
+        oFile.open(outputName.c_str(), ios::out | ios::binary);
         
-        char temporary_Char='.';
-        uint64_t fileSize = FileSize(inputName);
-
-        RSA R(key);
-        Vigenere_Cypher V(key);
-        uint32_t coun=0,track=0;
         do
         {
+            //Emptying buffer
+            buffer.clear();
+            buffer1.clear();
             coun = max_buffer_size;
             if( (fileSize - track) < max_buffer_size )
                 coun = fileSize - track;
-        
-            //Emptying buffer of residue data
-            string buffer, buffer1;
             //Reading file
             for(int i=0; i<coun; ++i)
             {
                 iFile.get(temporary_Char);
                 buffer += temporary_Char;
             }
-            
+            //Calling cryptografhy function
             if(!WhatToDo)
                 buffer1 = R.stringEncrypt(V.Encrypt(buffer));
             else
-                buffer1 = R.stringDecrypt(V.Decrypt(buffer));
+                buffer1 = V.Decrypt(R.stringDecrypt(buffer));
             //Writting file
             for(char i:buffer1)
             {
@@ -160,8 +155,8 @@ namespace My_namespace
                 oFile.put(temporary_Char);
             }
             track += coun;
-            if(track >= fileSize) break;
-        }while(!iFile.eof());
+        }while(track != fileSize && !iFile.eof());
+        
         iFile.close();
         oFile.close();
     }

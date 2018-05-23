@@ -6,7 +6,6 @@ namespace My_namespace
     public:
         bool isEncrypt=false, isDecrypt=false, isCompress=false, isDecompress=false, isFileFound=false, isKeyFound=false;
         size_t no_Argument;
-        uint64_t workFileSize;
         string workFile,key;
        
         Project_Parameter() {;}
