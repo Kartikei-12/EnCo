@@ -3,6 +3,7 @@
 #include<iostream>
 #include<fstream>
 #include<string>
+#include<iomanip>
 #include<algorithm>
 #include<locale>
 #include<vector>
@@ -12,37 +13,45 @@
 #include<time.h>
     using namespace std;
 #include"My_Libraries/Utility_Definations.h"
+#include"My_Libraries/parameter.h"
 #include"My_Libraries/Crypto.h"
-
+#include"My_Libraries/huffman.h"
 class Programm
 {
-    string inputName,outputName,fileExtension,Out_nameExtension;
+    string inputName,outputName,tempName,fileExtension,Out_nameExtended;
+
     My_namespace::Project_Parameter WorkP;
-    My_namespace::Vigenere_Cypher V;
-    My_namespace::RSA R;
 public:
     Programm(My_namespace::Project_Parameter PP)
     {
+        //Initializing work classes;
         WorkP = PP;
-        R(WorkP.key);
-        Vigenere_Cypher(WorkP.key);
         //Preparing I/O file names and such
         fileExtension = WorkP.workFile.substr(WorkP.workFile.rfind('.'));
         inputName.assign( WorkP.workFile.begin(), WorkP.workFile.begin()+WorkP.workFile.rfind('.') );
         
-        Out_nameExtension.clear();
+        Out_nameExtended.clear();
         if(WorkP.isEncrypt)
-            Out_nameExtension += "_e";
+            Out_nameExtended += "_e";
         else
-            Out_nameExtension += "_d";
+            Out_nameExtended += "_d";
         if(WorkP.isCompress)
-            Out_nameExtension += "_com";
+            Out_nameExtended += "_com";
         if(WorkP.isDecompress)
-            Out_nameExtension += "_decom";
-
-        outputName = inputName + Out_nameExtension + fileExtension;
-        
-        cout<<"\n\n\nHiiii\nExtension:"<<fileExtension;
+            Out_nameExtended += "_decom";
+        outputName = inputName + Out_nameExtended + fileExtension;
+        //I/O files names done//Files opened
+        //Doing work
+        if(WorkP.isEncrypt)
+        {
+            cout<<"\n\n\nHiiii\nExtension:"<<WorkP.isEncrypt;
+            //My_namespace::Cryptografhy();
+        }
+        else
+        {
+            cout<<"\nfgh";
+        }
+        cout<<"\nasd";
     }
 };
 
@@ -92,6 +101,9 @@ catch(My_ERROR E)
             break;
         case Invalid_Arguments:
             cerr<<"Invalid_Aguments";
+            break;
+        case Output_File_Exist:
+            cerr<<"Output_File_Exist";
             break;
         default:
             cerr<<"Unknown Exception by me.";

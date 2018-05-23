@@ -71,7 +71,9 @@ namespace My_namespace
     {
         string Key;
     public:
-        Vigenere_Cypher() {;}
+        Vigenere_Cypher() {
+            ;
+        }
         Vigenere_Cypher(string a) 
         {
             Key = a;
@@ -114,4 +116,53 @@ namespace My_namespace
             return decryptedMsg;
         }
     };
+
+    void Cryptografhy_function(string& inputName,string& outputName,string& key, bool WhatToDo)
+    {
+        //Opening required files
+        fstream iFile,oFile;
+        iFile.open(inputName.c_str(), ios::in | ios::binary);
+        if(!iFile.is_open())
+            throw Cannot_Open_File;
+        if(ifstream(outputName.c_str()))
+            throw Output_File_Exist;
+        oFile.open(outputName.c_str(), ios::out | ios::binary | ios::trunc);
+        
+        char temporary_Char='.';
+        uint64_t fileSize = FileSize(inputName);
+
+        RSA R(key);
+        Vigenere_Cypher V(key);
+        uint32_t coun=0,track=0;
+        do
+        {
+            coun = max_buffer_size;
+            if( (fileSize - track) < max_buffer_size )
+                coun = fileSize - track;
+        
+            //Emptying buffer of residue data
+            string buffer, buffer1;
+            //Reading file
+            for(int i=0; i<coun; ++i)
+            {
+                iFile.get(temporary_Char);
+                buffer += temporary_Char;
+            }
+            
+            if(!WhatToDo)
+                buffer1 = R.stringEncrypt(V.Encrypt(buffer));
+            else
+                buffer1 = R.stringDecrypt(V.Decrypt(buffer));
+            //Writting file
+            for(char i:buffer1)
+            {
+                temporary_Char = i;
+                oFile.put(temporary_Char);
+            }
+            track += coun;
+            if(track >= fileSize) break;
+        }while(!iFile.eof());
+        iFile.close();
+        oFile.close();
+    }
 }
