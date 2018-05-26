@@ -8,8 +8,7 @@ namespace My_namespace
         size_t no_Argument;
         string workFile,key;
        
-        Project_Parameter() {;}
-        Project_Parameter(auto command[],size_t a)
+        void setParameter(auto command[],size_t a)
         {
             string i;
             no_Argument = a;
@@ -40,17 +39,20 @@ namespace My_namespace
         void isValidCommand()
         {
             if(
-                !isKeyFound                                            ||
-                !isFileFound                                           ||
-                (isEncrypt && isDecrypt)                               ||
-                (isEncrypt && isDecompress)                            ||
-                (isCompress && isDecompress)                           ||
-                (isDecrypt && (isCompress || isDecompress))            ||
-                (isDecrypt && isDecompress && isEncrypt && isCompress) || 
-                (!isEncrypt && !isDecrypt)                             ||
+                !isKeyFound                                                ||
+                !isFileFound                                               ||
+                (isEncrypt && isDecrypt)                                   ||
+                (isEncrypt && isDecompress)                                ||
+                (isCompress && isDecompress)                               ||
+                (isCompress && isDecrypt)                                  ||
+                (!isEncrypt && !isDecrypt && !isCompress && !isDecompress) ||
                 false
             )
+            {
+                cerr<<"\n\tValid Flags:"
+                    <<"\n";
                 throw Invalid_Arguments;
+            }
         }
     };
 }

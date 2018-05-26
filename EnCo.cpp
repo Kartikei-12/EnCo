@@ -21,7 +21,8 @@ class Programm
 {
     string inputName,outputName,tempName,fileExtension,Out_nameExtended;
 public:
-    Programm(My_namespace::Project_Parameter WorkP)
+    My_namespace::Project_Parameter WorkP;
+    void DoIt()
     {
         //Preparing I/O file names and such
         fileExtension = WorkP.workFile.substr(WorkP.workFile.rfind('.'));
@@ -38,12 +39,29 @@ public:
             Out_nameExtended += "_decom";
         outputName = inputName + Out_nameExtended + fileExtension;
         inputName = WorkP.workFile;
+        tempName = "temp" + fileExtension;
         //I/O files names done//Files opened
         //Doing work
-        if(WorkP.isEncrypt)
+        if(WorkP.isEncrypt && !WorkP.isCompress)
             My_namespace::Cryptografhy_function(inputName,outputName,WorkP.key,!WorkP.isEncrypt);
-        else
+        else if(!WorkP.isEncrypt && WorkP.isCompress)
+            My_namespace::Huffman_Compression::encoder(inputName,outputName);
+        else if(WorkP.isEncrypt && WorkP.isCompress)
+        {
+            My_namespace::Cryptografhy_function(inputName,tempName,WorkP.key,!WorkP.isEncrypt);
+            My_namespace::Huffman_Compression::encoder(tempName,outputName);
+        }
+        else if(WorkP.isDecrypt && !WorkP.isDecompress)
             My_namespace::Cryptografhy_function(inputName,outputName,WorkP.key,WorkP.isDecrypt);
+        else if(!WorkP.isDecrypt && WorkP.isDecompress)
+            My_namespace::Huffman_Compression::decoder(inputName,outputName);
+        else 
+            if(WorkP.isDecrypt && WorkP.isDecompress)
+        {
+            My_namespace::Huffman_Compression::decoder(inputName,tempName);
+            My_namespace::Cryptografhy_function(tempName,outputName,WorkP.key,WorkP.isDecrypt);
+        }
+        remove(tempName.c_str());
     }
 };
 
@@ -54,13 +72,12 @@ try
     time_t t = time(0);
     struct tm *now = localtime(&t);
     ofstream Hist( "History.txt" , ios::out |ios::app);
-    My_namespace::Project_Parameter PP(argv,argc);
-    
+    Programm P;
     setlocale(LC_ALL,"en_Us.utf8");
+    P.WorkP.setParameter(argv,argc);
+    P.WorkP.isValidCommand();
 
-    PP.isValidCommand();
-
-    Programm P(PP);
+    P.DoIt();
     
     Hist<<now->tm_mday<<"/"
         <<(now->tm_mon + 1)<<"/"
@@ -70,7 +87,7 @@ try
     stop_s = clock();
     Hist<<(((stop_s-start_s)/double(CLOCKS_PER_SEC)) + 1)
         <<" sec Speed:"
-        <<(double )(My_namespace::FileSize(PP.workFile)/( 1024 * (((stop_s-start_s)/double(CLOCKS_PER_SEC)) + 1)))<<"\n";
+        <<(double )(My_namespace::FileSize(P.WorkP.workFile)/( 1024 * (((stop_s-start_s)/double(CLOCKS_PER_SEC)) + 1)))<<"\n";
     Hist.close();
     return 0;
 }

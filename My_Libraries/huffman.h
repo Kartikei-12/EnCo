@@ -2,7 +2,7 @@ namespace My_namespace
 {
     namespace Huffman_Compression
     {
-        #define HELP_ERROR 99
+        //#define HELP_ERROR 99
         #define width_unit 5
 
         // (Templated d-heap) (on dynamic array of pointers)
@@ -612,7 +612,7 @@ namespace My_namespace
             }
 
             uint64_t total_chars=(*tp).get_freq();
-            cout<<"total chars to encode:"<<total_chars<<endl;
+            //cout<<"total chars to encode:"<<total_chars<<endl;
 
             //output Huffman coded chars into the output file
             unsigned char ch2;
@@ -704,7 +704,7 @@ namespace My_namespace
             string st;
             unsigned char ch2;
             uint64_t total_chars=(*tp).get_freq();
-            cout<<"total chars to decode:"<<total_chars<<endl;
+            //cout<<"total chars to decode:"<<total_chars<<endl;
             while(total_chars>0) //continue until no char left to decode 
             {
                 st=""; //current Huffman string
