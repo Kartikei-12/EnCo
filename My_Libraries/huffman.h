@@ -537,10 +537,25 @@ namespace My_namespace
         void encoder(string ifile, string ofile)
         {
             ifstream infile(ifile.c_str(), ios::in|ios::binary);
-            
+            if(!infile)
+            {
+                cerr<<ifile<<" could not be opened!"<<endl;
+                exit(1);
+            }
+
+            if(ifstream(ofile.c_str()))
+            {
+                cerr<<ofile<<" already exists!"<<endl;
+                exit(1);
+            }
+
             //open the output file
             ofstream outfile(ofile.c_str(), ios::out|ios::binary);
-
+            if(!outfile)
+            {
+                cerr<<ofile<<" could not be opened!"<<endl;
+                exit(1);
+            }
             //array to hold frequency table for all ASCII characters in the file
             uint64_t f[256];
             for(int i=0;i<256;++i)
@@ -641,10 +656,25 @@ namespace My_namespace
         void decoder(string ifile, string ofile)
         {
             ifstream infile(ifile.c_str(), ios::in|ios::binary);
+            if(!infile)
+            {
+                cerr<<ifile<<" could not be opened!"<<endl;
+                exit(1);
+            }
+
+            if(ifstream(ofile.c_str()))
+            {
+                cerr<<ofile<<" already exists!"<<endl;
+                exit(1);
+            }
 
             //open the output file
             ofstream outfile(ofile.c_str(), ios::out|ios::binary);
-
+            if(!outfile)
+            {
+                cerr<<ofile<<" could not be opened!"<<endl;
+                exit(1);
+            }
             //read frequency table from the input file
             uint64_t f[256];
             char c;

@@ -8,11 +8,11 @@
 #include<algorithm>
 #include<locale>
 #include<vector>
-#include<ctype.h>
+#include<cctype>
 #include<windows.h>
-#include<conio.h>
 #include<time.h>
     using namespace std;
+//User defined lbraries
 #include"My_Libraries/Utility_Definations.h"
 #include"My_Libraries/parameter.h"
 #include"My_Libraries/Crypto.h"
@@ -22,12 +22,14 @@ class Programm
     string inputName,outputName,tempName,fileExtension,Out_nameExtended;
 public:
     My_namespace::Project_Parameter WorkP;
-    void DoIt()
+    void DoIt()//Function doing main work
     {
         //Preparing I/O file names and such
         fileExtension = WorkP.workFile.substr(WorkP.workFile.rfind('.'));
+        tempName = "temp" + fileExtension;
         inputName.assign( WorkP.workFile.begin(), WorkP.workFile.begin()+WorkP.workFile.rfind('.') );
         
+        //Preparing extended file name for Output file
         Out_nameExtended.clear();
         if(WorkP.isEncrypt)
             Out_nameExtended += "_e";
@@ -38,29 +40,39 @@ public:
         if(WorkP.isDecompress)
             Out_nameExtended += "_decom";
         outputName = inputName + Out_nameExtended + fileExtension;
+        
+        //Resetting original Input file name
         inputName = WorkP.workFile;
-        tempName = "temp" + fileExtension;
-        //I/O files names done//Files opened
+        
         //Doing work
+        //When Only file encryption is asked
         if(WorkP.isEncrypt && !WorkP.isCompress)
             My_namespace::Cryptografhy_function(inputName,outputName,WorkP.key,!WorkP.isEncrypt);
+        //When only file compression is asked
         else if(!WorkP.isEncrypt && WorkP.isCompress)
             My_namespace::Huffman_Compression::encoder(inputName,outputName);
+        //When both file encryption and compression is asked
         else if(WorkP.isEncrypt && WorkP.isCompress)
         {
             My_namespace::Cryptografhy_function(inputName,tempName,WorkP.key,!WorkP.isEncrypt);
             My_namespace::Huffman_Compression::encoder(tempName,outputName);
         }
+        //When only file decryption is required
         else if(WorkP.isDecrypt && !WorkP.isDecompress)
             My_namespace::Cryptografhy_function(inputName,outputName,WorkP.key,WorkP.isDecrypt);
+        //When only file decompresin is asked
         else if(!WorkP.isDecrypt && WorkP.isDecompress)
             My_namespace::Huffman_Compression::decoder(inputName,outputName);
-        else 
-            if(WorkP.isDecrypt && WorkP.isDecompress)
+        //When both file decompression and decryption is required
+        else if(WorkP.isDecrypt && WorkP.isDecompress)
         {
             My_namespace::Huffman_Compression::decoder(inputName,tempName);
             My_namespace::Cryptografhy_function(tempName,outputName,WorkP.key,WorkP.isDecrypt);
         }
+        //Unknoen case
+        else
+            throw Cannot_Process_Request;
+        //Removing temporary file if any
         remove(tempName.c_str());
     }
 };
@@ -71,14 +83,16 @@ try
     uint64_t start_s = clock(), stop_s=0;
     time_t t = time(0);
     struct tm *now = localtime(&t);
-    ofstream Hist( "History.txt" , ios::out |ios::app);
-    Programm P;
+    ofstream Hist( "My_Log.txt" , ios::out |ios::app);
+    
     setlocale(LC_ALL,"en_Us.utf8");
+    //Defineing project object an dchecking validity of command
+    Programm P;
     P.WorkP.setParameter(argv,argc);
     P.WorkP.isValidCommand();
-
+    //Calling method to perform task asked
     P.DoIt();
-    
+    //Writting log file
     Hist<<now->tm_mday<<"/"
         <<(now->tm_mon + 1)<<"/"
         <<(now->tm_year + 1900)<<" "
@@ -92,7 +106,7 @@ try
     return 0;
 }
 catch(My_ERROR E)
-{
+{//For exception thrown by user-defined class,method and function
     switch(E)
     {
         case Cannot_Open_File:
@@ -116,17 +130,21 @@ catch(My_ERROR E)
         case Output_File_Exist:
             cerr<<"Output_File_Exist";
             break;
+        case Cannot_Process_Request:
+            cerr<<"Cannot process request due to unknown reason.";
+            break;
         default:
             cerr<<"Unknown Exception by me.";
     }
-    cerr<<"\nTry:\n./EnCo.exe -file FILE_NAME -key KEY -e -c";
+    My_namespace::provideValidFlags();
 }
 catch(exception& e)
-{
+{//For exception thrown by predefined library function, class and methods
     cerr<<endl<<e.what();
+    My_namespace::provideValidFlags();
 }
 catch(...)
-{
+{//Exception not caught by both user-defined exceptions and exception library
     cerr<<"Unknown Exception.\n";
-    cerr<<"\nTry:\n./EnCo.exe -file FILE_NAME -key KEY -e -com";
+    My_namespace::provideValidFlags();
 }

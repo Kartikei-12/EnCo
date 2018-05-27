@@ -48,11 +48,7 @@ namespace My_namespace
                 (!isEncrypt && !isDecrypt && !isCompress && !isDecompress) ||
                 false
             )
-            {
-                cerr<<"\n\tValid Flags:"
-                    <<"\n";
                 throw Invalid_Arguments;
-            }
         }
     };
 }

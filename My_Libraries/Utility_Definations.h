@@ -7,6 +7,7 @@ enum My_ERROR{
         Insufficient_Argument_Length,
         Invalid_Arguments,
         Output_File_Exist,
+        Cannot_Process_Request,
         Unknown_Error = 20  
     };
 namespace My_namespace
@@ -59,5 +60,26 @@ namespace My_namespace
             if ( primes[i] )
                 ret.push_back(i);
         return ret;
+    }
+
+    //Valid flags
+    void provideValidFlags()
+    {
+        cerr<<"\nFlag details"
+            <<"\n\tCompulsary flags:"
+            <<"\n\t\t-file : Need to be followed by input file name"
+            <<"\n\t\t-key : Need to be followed by string of chracters containning atleast one alfhabet"
+            <<"\n\tOther flags"
+            <<"\n\t\t-e     : For encryption"
+            <<"\n\t\t-d     : For decryption"
+            <<"\n\t\t-com   : For compression"
+            <<"\n\t\t-decom : For decompression"
+            <<"\n\tInvalid flag combination:-"
+            <<"\n\t\t-e -d"
+            <<"\n\t\t-com -decom"
+            <<"\n\t\t-e -decom"
+            <<"\n\t\t-d -com"
+            <<"\n\t\t-e -d -com -decom"
+            <<"";
     }
 }
