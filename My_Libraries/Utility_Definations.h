@@ -8,19 +8,20 @@ enum My_ERROR{
         Invalid_Arguments,
         Output_File_Exist,
         Cannot_Process_Request,
+        Help,
         Unknown_Error = 20  
     };
 namespace My_namespace
 {   
-    //Returns size of file, name supplied
-    uint64_t FileSize(string name)
+    //Returns size of file when file name supplied
+    inline uint64_t FileSize(string name)
     {
         fstream my(name.c_str(),ios::in);
         auto a = my.tellg();
         my.seekg(0,ios::end);
         auto b = my.tellg() - a;
         my.close();
-        return b-a;
+        return (b-a);
     }
     
     //Largest Common Multiple
@@ -65,7 +66,9 @@ namespace My_namespace
     //Valid flags
     void provideValidFlags()
     {
-        cerr<<"\nFlag details"
+        cerr<<"Usage:"
+            <<"\n./EnCo.exe [-h] [-file FILE_NAME] [-key KEY] [-e] [-c] [-d] [-com] [-decom]"
+            <<"\nFlag details"
             <<"\n\tCompulsary flags:"
             <<"\n\t\t-file : Need to be followed by input file name"
             <<"\n\t\t-key : Need to be followed by string of chracters containning atleast one alfhabet"

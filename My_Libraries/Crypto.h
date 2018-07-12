@@ -1,8 +1,10 @@
 namespace My_namespace
 {
+    //Clas managing RSA cryptografhy
     class RSA
     {
         int32_t prime_1, prime_2, totient, pu_K, modulas_n, pr_K;
+        //Keys generator
         void Parameter_Generator()
         {            
             modulas_n = prime_1 * prime_2;
@@ -19,6 +21,7 @@ namespace My_namespace
             pr_K = (int)temp;
         }
 
+        //Generates valid keys
         void RSA_Generator(int a,int b)
         {
             bool satisfied = false;
@@ -69,6 +72,7 @@ namespace My_namespace
         }
     };
 
+    //Class to manage Vigenere Cypher
     class Vigenere_Cypher
     {
         string Key;
@@ -76,6 +80,7 @@ namespace My_namespace
         Vigenere_Cypher() {
             ;
         }
+        //Setting strickly Capital alfhabatic key
         Vigenere_Cypher(string a) 
         {
             for(int i=0; i<a.length(); ++i)
@@ -112,9 +117,10 @@ namespace My_namespace
         }
     };
 
+    //Method to perform encryption and decryption
     void Cryptografhy_function(string& inputName,string& outputName,string& key, bool WhatToDo)
     {
-        //Opening required files
+        //Defining required variables and objects
         char temporary_Char='.';
         uint64_t fileSize = FileSize(inputName),coun=0,track=0;
         string buffer, buffer1;
@@ -122,6 +128,7 @@ namespace My_namespace
         RSA R(key);
         Vigenere_Cypher V(key);
         
+        //Opening required files
         iFile.open(inputName.c_str(), ios::in | ios::binary);
         if(!iFile.is_open())
             throw Cannot_Open_File;
@@ -129,6 +136,7 @@ namespace My_namespace
             throw Output_File_Exist;
         oFile.open(outputName.c_str(), ios::out | ios::binary);
         
+
         do
         {
             //Emptying buffer
@@ -143,7 +151,7 @@ namespace My_namespace
                 iFile.get(temporary_Char);
                 buffer += temporary_Char;
             }
-            //Calling cryptografhy function
+            //Calling cryptografhy functions
             if(!WhatToDo)
                 buffer1 = R.stringEncrypt(V.Encrypt(buffer));
             else
@@ -157,6 +165,7 @@ namespace My_namespace
             track += coun;
         }while(track != fileSize && !iFile.eof());
         
+        //Closing file
         iFile.close();
         oFile.close();
     }

@@ -12,7 +12,7 @@
 #include<windows.h>
 #include<time.h>
     using namespace std;
-//User defined lbraries
+//Project lbraries
 #include"My_Libraries/Utility_Definations.h"
 #include"My_Libraries/parameter.h"
 #include"My_Libraries/Crypto.h"
@@ -132,6 +132,8 @@ catch(My_ERROR E)
             break;
         case Cannot_Process_Request:
             cerr<<"Cannot process request due to unknown reason.";
+            break;
+        case Help:
             break;
         default:
             cerr<<"Unknown Exception by me.";

@@ -3,7 +3,9 @@ param(
     [string]$mExtension=".txt",
     [string]$mKey="KEY"
     )
-#Script to test project
+#Script is to test project only.
+#Script works strickly on Windows 7 and above
+#Project is compataible with any system with C++14 compiler
 g++ -std=c++14 EnCo.cpp -o EnCo.exe
 #-- Processing file
 $pro = './EnCo.exe'
@@ -20,3 +22,4 @@ Remove-Item -path "$($mFile)_e_com$($mExtension)" -recurse -Force
 #--
 Remove-Item -path EnCo.exe -recurse -Force
 notepad "$($mFile)_e_com_d_decom$($mExtension)"
+Remove-Item -path data_e_com_d_decom.txt -recurse -Force

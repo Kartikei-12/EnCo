@@ -15,6 +15,8 @@ namespace My_namespace
             for(size_t j=1; j<a; ++j)
             {
                 i = command[j];
+                if(i == "-h")
+                    throw Help;
                 if(i == "-e")
                     isEncrypt = true;
                 if(i == "-d")
@@ -39,13 +41,13 @@ namespace My_namespace
         void isValidCommand()
         {
             if(
-                !isKeyFound                                                ||
-                !isFileFound                                               ||
-                (isEncrypt && isDecrypt)                                   ||
-                (isEncrypt && isDecompress)                                ||
-                (isCompress && isDecompress)                               ||
-                (isCompress && isDecrypt)                                  ||
-                (!isEncrypt && !isDecrypt && !isCompress && !isDecompress) ||
+                !isKeyFound                                                || //Key not found
+                !isFileFound                                               || //Input file not found
+                (isEncrypt && isDecrypt)                                   || //Both encryption and decryption
+                (isEncrypt && isDecompress)                                || //Both encryption and decompression
+                (isCompress && isDecompress)                               || ////Both compression and decompression
+                (isCompress && isDecrypt)                                  || //Both compression and decryption
+                (!isEncrypt && !isDecrypt && !isCompress && !isDecompress) || //None operational parameter found
                 false
             )
                 throw Invalid_Arguments;
