@@ -15,22 +15,25 @@ namespace My_namespace
             for(size_t j=1; j<a; ++j)
             {
                 i = command[j];
-                if(i == "-h")
-                    throw Help;
-                if(i == "-e")
+                if(i == "-h" || i == "--help")
+                {
+                    My_namespace::provideValidFlags();
+                    exit(0);
+                }
+                if(i == "-e" || i == "--encrypt")
                     isEncrypt = true;
-                if(i == "-d")
+                if(i == "-d" || i == "--decrypt")
                     isDecrypt = true;
-                if(i == "-com")
+                if(i == "-com" || i == "--compress")
                     isCompress = true;
-                if(i == "-decom")
+                if(i == "-decom" || i == "--decompress")
                     isDecompress = true;
-                if(i == "-file")
+                if(i == "-f" || i == "--file")
                 {
                     isFileFound = true;
                     workFile = command[j+1];
                 }
-                if(i == "-key")
+                if(i == "-k" || i == "--key")
                 {
                     isKeyFound = true;
                     key = command[j+1];

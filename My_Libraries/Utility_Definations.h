@@ -8,7 +8,6 @@ enum My_ERROR{
         Invalid_Arguments,
         Output_File_Exist,
         Cannot_Process_Request,
-        Help,
         Unknown_Error = 20  
     };
 namespace My_namespace
@@ -70,13 +69,14 @@ namespace My_namespace
             <<"\n./EnCo.exe [-h] [-file FILE_NAME] [-key KEY] [-e] [-c] [-d] [-com] [-decom]"
             <<"\nFlag details"
             <<"\n\tCompulsary flags:"
-            <<"\n\t\t-file : Need to be followed by input file name"
-            <<"\n\t\t-key : Need to be followed by string of chracters containning atleast one alfhabet"
+            <<"\n\t\t-f, --file : Need to be followed by input file name"
+            <<"\n\t\t-k, --key  : Need to be followed by string of chracters containning atleast one alfhabet."
+            <<"\n\t\t-h, --help : To view all usage commands."
             <<"\n\tOther flags"
-            <<"\n\t\t-e     : For encryption"
-            <<"\n\t\t-d     : For decryption"
-            <<"\n\t\t-com   : For compression"
-            <<"\n\t\t-decom : For decompression"
+            <<"\n\t\t-e, --encrypt        : For encryption"
+            <<"\n\t\t-d, --decrypt        : For decryption"
+            <<"\n\t\t-com, --compress     : For compression"
+            <<"\n\t\t-decom, --decompress : For decompression"
             <<"\n\tInvalid flag combination:-"
             <<"\n\t\t-e -d"
             <<"\n\t\t-com -decom"

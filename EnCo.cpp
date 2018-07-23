@@ -1,5 +1,5 @@
 //Standard command template
-//./EnCo.exe -file FILE_NAME -key KEY -e -c
+//./EnCo.exe --file FILE_NAME --key KEY -e -c
 #include<iostream>
 #include<fstream>
 #include<string>
@@ -90,8 +90,10 @@ try
     Programm P;
     P.WorkP.setParameter(argv,argc);
     P.WorkP.isValidCommand();
+    
     //Calling method to perform task asked
     P.DoIt();
+    
     //Writting log file
     Hist<<now->tm_mday<<"/"
         <<(now->tm_mon + 1)<<"/"
@@ -132,8 +134,6 @@ catch(My_ERROR E)
             break;
         case Cannot_Process_Request:
             cerr<<"Cannot process request due to unknown reason.";
-            break;
-        case Help:
             break;
         default:
             cerr<<"Unknown Exception by me.";

@@ -9,17 +9,16 @@ param(
 g++ -std=c++14 EnCo.cpp -o EnCo.exe
 #-- Processing file
 $pro = './EnCo.exe'
-$ArgsList = " -file "+"$($mFile)$($mExtension)"+" -key "+$mKey+" -e -com"
+$ArgsList = " -f "+"$($mFile)$($mExtension)"+" -k "+$mKey+" -e -com"
 Start-Process $pro -ArgumentList $ArgsList -Wait -NoNewWindow
 #--
 Start-Sleep -s 2
 #-- Re-Processing file
 $pro = './EnCo.exe'
-$ArgsList = " -file "+"$($mFile)_e_com$($mExtension)"+" -key "+$mKey+" -d -decom"
+$ArgsList = " -f "+"$($mFile)_e_com$($mExtension)"+" -k "+$mKey+" -d -decom"
 Start-Process $pro -ArgumentList $ArgsList -Wait -NoNewWindow
 #--
 Remove-Item -path "$($mFile)_e_com$($mExtension)" -recurse -Force
 #--
 Remove-Item -path EnCo.exe -recurse -Force
 notepad "$($mFile)_e_com_d_decom$($mExtension)"
-Remove-Item -path data_e_com_d_decom.txt -recurse -Force
