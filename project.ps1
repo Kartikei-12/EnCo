@@ -21,4 +21,3 @@ Start-Process $pro -ArgumentList $ArgsList -Wait -NoNewWindow
 Remove-Item -path "$($mFile)_e_com$($mExtension)" -recurse -Force
 #--
 Remove-Item -path EnCo.exe -recurse -Force
-notepad "$($mFile)_e_com_d_decom$($mExtension)"

@@ -69,7 +69,7 @@ public:
             My_namespace::Huffman_Compression::decoder(inputName,tempName);
             My_namespace::Cryptografhy_function(tempName,outputName,WorkP.key,WorkP.isDecrypt);
         }
-        //Unknoen case
+        //Unknown case
         else
             throw Cannot_Process_Request;
         //Removing temporary file if any
@@ -83,10 +83,10 @@ try
     uint64_t start_s = clock(), stop_s=0;
     time_t t = time(0);
     struct tm *now = localtime(&t);
-    ofstream Hist( "My_Log.txt" , ios::out |ios::app);
+    ofstream Hist("My_Log.txt", ios::out |ios::app);
     
     setlocale(LC_ALL,"en_Us.utf8");
-    //Defineing project object an dchecking validity of command
+    //Defineing project object and checking validity of command
     Programm P;
     P.WorkP.setParameter(argv,argc);
     P.WorkP.isValidCommand();
@@ -102,7 +102,7 @@ try
         <<"";
     stop_s = clock();
     Hist<<(((stop_s-start_s)/double(CLOCKS_PER_SEC)) + 1)
-        <<" sec Speed:"
+        <<" sec Speed(KB/s):"
         <<(double )(My_namespace::FileSize(P.WorkP.workFile)/( 1024 * (((stop_s-start_s)/double(CLOCKS_PER_SEC)) + 1)))<<"\n";
     Hist.close();
     return 0;

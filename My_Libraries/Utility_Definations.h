@@ -1,4 +1,4 @@
-#define max_buffer_size 160
+#define max_buffer_size 320
 enum My_ERROR{
         Cannot_Open_File,
         Invalid_Choice,

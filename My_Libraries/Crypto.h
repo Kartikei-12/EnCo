@@ -3,6 +3,7 @@ namespace My_namespace
     //Clas managing RSA cryptografhy
     class RSA
     {
+        map<char, char> enList, deList;
         int32_t prime_1, prime_2, totient, pu_K, modulas_n, pr_K;
         //Keys generator
         void Parameter_Generator()
