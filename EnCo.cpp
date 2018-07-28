@@ -8,6 +8,7 @@
 #include<algorithm>
 #include<locale>
 #include<vector>
+#include<map>
 #include<cctype>
 #include<windows.h>
 #include<time.h>
@@ -138,6 +139,7 @@ catch(My_ERROR E)
         default:
             cerr<<"Unknown Exception by me.";
     }
+    cerr<<"\n";
     My_namespace::provideValidFlags();
 }
 catch(exception& e)

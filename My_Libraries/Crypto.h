@@ -51,24 +51,30 @@ namespace My_namespace
         RSA(string KEY) {
             RSA_Generator( KEY.at(0) , KEY.at(1) );
         }
-        char charEncrypt(size_t data) {
-            return mod_Exp(data, pu_K, modulas_n);
+        char charEncrypt(size_t data) 
+        {
+            if(enList.find(data) == enList.end())
+                enList[data] = mod_Exp(data, pu_K, modulas_n);
+            return enList[data];
         }
-        char charDecrypt(size_t enMsge) {
-            return mod_Exp(enMsge, pr_K, modulas_n);
+        char charDecrypt(size_t enMsge) 
+        {
+            if(deList.find(enMsge) == deList.end())
+                deList[enMsge] = mod_Exp(enMsge, pr_K, modulas_n);
+            return deList[enMsge];
         }
         string stringEncrypt(string msg)
         {
             string encryptedMsg = "";
             for(char i:msg)
-                encryptedMsg += mod_Exp(i, pu_K, modulas_n);
+                encryptedMsg += charEncrypt(i);
             return encryptedMsg;
         }
         string stringDecrypt(string enMsg)
         {
             string decryptedMsg = "";
             for(char i:enMsg)
-                decryptedMsg += mod_Exp(i, pr_K, modulas_n);
+                decryptedMsg += charDecrypt(i);
             return decryptedMsg;
         }
     };

@@ -1,5 +1,7 @@
 *.txt
 *.exe
 *.MP4
+*.mp3
+*.mp4
 .vscode
 test.cpp
