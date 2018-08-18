@@ -3,5 +3,6 @@
 *.MP4
 *.mp3
 *.mp4
+*.log
 .vscode
 test.cpp

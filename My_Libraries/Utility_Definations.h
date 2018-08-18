@@ -1,4 +1,4 @@
-#define max_buffer_size 320
+#define max_buffer_size 160
 enum My_ERROR{
         Cannot_Open_File,
         Invalid_Choice,
@@ -11,7 +11,20 @@ enum My_ERROR{
         Unknown_Error = 20  
     };
 namespace My_namespace
-{   
+{
+    //Log keeper
+    void keepLog(const string message)
+    {
+        static ofstream Log("EnCo.log", ios::out |ios::app);
+        if(message != "Clean Up")
+            Log<<message;
+        else
+        {
+            Log<<endl;
+            Log.close();
+        }
+    }
+
     //Returns size of file when file name supplied
     inline uint64_t FileSize(string name)
     {

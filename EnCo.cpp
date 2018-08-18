@@ -84,9 +84,12 @@ try
     uint64_t start_s = clock(), stop_s=0;
     time_t t = time(0);
     struct tm *now = localtime(&t);
-    ofstream Hist("My_Log.txt", ios::out |ios::app);
+
+    setlocale(LC_ALL, "en_Us.utf8");
+    string right_now = asctime(now);
+    My_namespace::keepLog("-------------------------------------------------\n"+
+                          right_now);
     
-    setlocale(LC_ALL,"en_Us.utf8");
     //Defineing project object and checking validity of command
     Programm P;
     P.WorkP.setParameter(argv,argc);
@@ -95,17 +98,14 @@ try
     //Calling method to perform task asked
     P.DoIt();
     
-    //Writting log file
-    Hist<<now->tm_mday<<"/"
-        <<(now->tm_mon + 1)<<"/"
-        <<(now->tm_year + 1900)<<" "
-        <<"Time: "
-        <<"";
+    //Ending time counter and calculating efficiency factors 
     stop_s = clock();
-    Hist<<(((stop_s-start_s)/double(CLOCKS_PER_SEC)) + 1)
-        <<" sec Speed(KB/s):"
-        <<(double )(My_namespace::FileSize(P.WorkP.workFile)/( 1024 * (((stop_s-start_s)/double(CLOCKS_PER_SEC)) + 1)))<<"\n";
-    Hist.close();
+    auto duration = ((stop_s-start_s)/double(CLOCKS_PER_SEC)) + 0.5;
+    auto speed = (double )My_namespace::FileSize(P.WorkP.workFile)/( 1024.0 * duration);
+    My_namespace::keepLog("Run time: "+to_string(duration)+
+                          " sec Speed(KB/s):"+to_string(speed)+
+                          "\n-------------------------------------------------\n\n\n");
+    My_namespace::keepLog("Clean Up");
     return 0;
 }
 catch(My_ERROR E)
@@ -141,6 +141,7 @@ catch(My_ERROR E)
     }
     cerr<<"\n";
     My_namespace::provideValidFlags();
+    cerr<<"\n";
 }
 catch(exception& e)
 {//For exception thrown by predefined library function, class and methods
