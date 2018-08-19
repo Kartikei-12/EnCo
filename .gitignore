@@ -5,4 +5,5 @@
 *.mp4
 *.log
 .vscode
+test1.h
 test.cpp

@@ -175,16 +175,6 @@ namespace My_namespace
                 }
             } 
         }
-        /*
-        // the values of 2 variables will be swapped
-        template<class T>
-        void Queue<T>::swap(T* &a, T* &b)
-        {
-            T* c;
-            c=a;
-            a=b;
-            b=c;
-        }*/
 
         // destructor (because default dest. does not erase the array)
         template<class T>
@@ -192,7 +182,6 @@ namespace My_namespace
         {
             delete[] arr;
         }
-
 
         // Huffman Tree
         class Tree
@@ -538,24 +527,15 @@ namespace My_namespace
         {
             ifstream infile(ifile.c_str(), ios::in|ios::binary);
             if(!infile)
-            {
-                cerr<<ifile<<" could not be opened!"<<endl;
-                exit(1);
-            }
+                throw error.encountered(ifile+" cannot be opened", __FILE__, __LINE__);
 
             if(ifstream(ofile.c_str()))
-            {
-                cerr<<ofile<<" already exists!"<<endl;
-                exit(1);
-            }
+                throw error.encountered(ofile+" already exist", __FILE__, __LINE__);
 
             //open the output file
             ofstream outfile(ofile.c_str(), ios::out|ios::binary);
             if(!outfile)
-            {
-                cerr<<ofile<<" could not be opened!"<<endl;
-                exit(1);
-            }
+                throw error.encountered(ofile+" already exist", __FILE__, __LINE__);
             //array to hold frequency table for all ASCII characters in the file
             uint64_t f[256];
             for(int i=0;i<256;++i)
@@ -619,7 +599,7 @@ namespace My_namespace
             //find H. strings of all chars in the H. tree and put into a string table
             string H_table[256];
             unsigned char uc;
-            for(unsigned short us=0;us<256;++us)
+            for(unsigned short us=0; us<256; ++us)
             {
                 H_table[us]="";
                 uc=static_cast<unsigned char>(us);
@@ -627,8 +607,7 @@ namespace My_namespace
             }
 
             uint64_t total_chars=(*tp).get_freq();
-            //cout<<"total chars to encode:"<<total_chars<<endl;
-
+        
             //output Huffman coded chars into the output file
             unsigned char ch2;
             while(infile.get(c))
@@ -657,30 +636,21 @@ namespace My_namespace
         {
             ifstream infile(ifile.c_str(), ios::in|ios::binary);
             if(!infile)
-            {
-                cerr<<ifile<<" could not be opened!"<<endl;
-                exit(1);
-            }
+                throw error.encountered(ifile+" cannot be opened", __FILE__, __LINE__);
 
             if(ifstream(ofile.c_str()))
-            {
-                cerr<<ofile<<" already exists!"<<endl;
-                exit(1);
-            }
+                throw error.encountered(ofile+" already exist.", __FILE__, __LINE__);
 
             //open the output file
             ofstream outfile(ofile.c_str(), ios::out|ios::binary);
             if(!outfile)
-            {
-                cerr<<ofile<<" could not be opened!"<<endl;
-                exit(1);
-            }
+                throw error.encountered(ofile+" cannot be opened", __FILE__, __LINE__);
             //read frequency table from the input file
             uint64_t f[256];
             char c;
             unsigned char ch;
             uint64_t j=1;
-            for(int i=0;i<256;++i)
+            for(int i=0; i<256; ++i)
             {
                 //read 4 bytes and combine them into one 32 bit u. int value
                 f[i]=0;
@@ -756,7 +726,6 @@ namespace My_namespace
 
             infile.close();
             outfile.close();
-
         }
     }
 }

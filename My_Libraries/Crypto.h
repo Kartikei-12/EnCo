@@ -42,6 +42,7 @@ namespace My_namespace
                     if(failure==0 && modulas_n<256 && modulas_n>100)
                         satisfied = true;
                 }
+            keepLog("Generating RSA Key.", __FILE__, __LINE__);
         }
         
     public:
@@ -84,9 +85,7 @@ namespace My_namespace
     {
         string Key;
     public:
-        Vigenere_Cypher() {
-            ;
-        }
+        Vigenere_Cypher() {;}
         //Setting strickly Capital alfhabatic key
         Vigenere_Cypher(string a) 
         {
@@ -138,12 +137,11 @@ namespace My_namespace
         //Opening required files
         iFile.open(inputName.c_str(), ios::in | ios::binary);
         if(!iFile.is_open())
-            throw Cannot_Open_File;
+            throw error.encountered("Cannot Open File", __FILE__, __LINE__);
         if(ifstream(outputName.c_str()))
-            throw Output_File_Exist;
+            throw error.encountered("Output file already exist.", __FILE__, __LINE__);;
         oFile.open(outputName.c_str(), ios::out | ios::binary);
         
-
         do
         {
             //Emptying buffer

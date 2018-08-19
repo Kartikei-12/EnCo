@@ -1,28 +1,40 @@
-#define max_buffer_size 160
-enum My_ERROR{
-        Cannot_Open_File,
-        Invalid_Choice,
-        Insufficient_Argument,
-        Excess_Argument,
-        Insufficient_Argument_Length,
-        Invalid_Arguments,
-        Output_File_Exist,
-        Cannot_Process_Request,
-        Unknown_Error = 20  
-    };
+
+#define max_buffer_size 320
+
 namespace My_namespace
 {
-    //Log keeper
-    void keepLog(const string message)
+    //Method to write .log file
+    inline void keepLog(const string message, 
+                        const string f="", const size_t l=0,
+                        const uint64_t fsize=0) 
     {
         static ofstream Log("EnCo.log", ios::out |ios::app);
-        if(message != "Clean Up")
-            Log<<message;
-        else
+        static uint64_t start_s = 0, stop_s=0;
+        if(message == "start-log")
         {
-            Log<<endl;
+            start_s = clock();
+            time_t t = time(0);
+            struct tm *now = localtime(&t);
+            Log<<"-------------------------------------------------"<<endl
+               <<asctime(now)<<endl;
+        }
+        else if(message == "end-log")
+        {
+            //Ending time counter and calculating efficiency factors 
+            stop_s = clock();
+            auto duration = ((stop_s-start_s)/double(CLOCKS_PER_SEC)) + 0.5;
+            auto speed = (double )fsize/( 1024.0 * duration);
+            Log<<"Run time: "<<duration<<" sec\n"
+               <<"Speed: "<<speed<<" KB/s\n"        
+               <<"-------------------------------------------------\n"<<endl;
             Log.close();
         }
+        else
+            if(f != "" && l!=0)
+                Log<<message<<" file: "<<f<<" line: "<<l<<endl;
+            else
+                Log<<message<<endl;
+        cout<<message<<" file: "<<f<<" line: "<<l<<endl;
     }
 
     //Returns size of file when file name supplied
@@ -65,12 +77,15 @@ namespace My_namespace
             if (primes[i]) 
                 for(int j = i*i; j<sz; j+=i)
                     primes[j] = false;
+        
         vector<int> ret;
-        ret.reserve(primes.size());//Make sure there is space for "max" number of elements.
+        //Reserving space for "max" number of elements.
+        ret.reserve(primes.size());
+        
         //We do not want 2 in out list of prime numbers.
         //ret.push_back(2);
-        for (int i=3; i<sz; i+=2)
-            if ( primes[i] )
+        for(int i=3; i<sz; i+=2)
+            if(primes[i])
                 ret.push_back(i);
         return ret;
     }
@@ -96,6 +111,14 @@ namespace My_namespace
             <<"\n\t\t-e -decom"
             <<"\n\t\t-d -com"
             <<"\n\t\t-e -d -com -decom"
-            <<"";
+            <<endl;
+    }
+
+    //Method to clean up after encountering an error or exception
+    void error_clean_up(string s)
+    {
+        provideValidFlags();
+        keepLog(s);
+        keepLog("end-log");
     }
 }

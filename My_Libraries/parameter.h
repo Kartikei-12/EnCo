@@ -4,11 +4,27 @@ namespace My_namespace
     class Project_Parameter
     {
     public:
-        bool isEncrypt=false, isDecrypt=false, isCompress=false, isDecompress=false, isFileFound=false, isKeyFound=false;
+        bool isEncrypt=false, isDecrypt=false,
+             isCompress=false, isDecompress=false,
+             isFileFound=false, isKeyFound=false;
         size_t no_Argument;
         string workFile,key;
-       
-        void setParameter(auto command[],size_t a)
+
+        void isValidCommand()
+        {
+            if(!isKeyFound                                                || //Key not found
+               !isFileFound                                               || //Input file not found
+               (isEncrypt && isDecrypt)                                   || //Both encryption and decryption
+               (isEncrypt && isDecompress)                                || //Both encryption and decompression
+               (isCompress && isDecompress)                               || //Both compression and decompression
+               (isCompress && isDecrypt)                                  || //Both compression and decryption
+               (!isEncrypt && !isDecrypt && !isCompress && !isDecompress) || //None operational parameter found
+               false
+            )
+                throw error.encountered("Invalid Arguments.", __FILE__, __LINE__);
+        }
+
+        void parameter_parser(auto command[],size_t a)
         {
             string i;
             no_Argument = a;
@@ -16,10 +32,7 @@ namespace My_namespace
             {
                 i = command[j];
                 if(i == "-h" || i == "--help")
-                {
-                    My_namespace::provideValidFlags();
-                    exit(0);
-                }
+                    throw error.encountered("Help.");
                 if(i == "-e" || i == "--encrypt")
                     isEncrypt = true;
                 if(i == "-d" || i == "--decrypt")
@@ -39,21 +52,7 @@ namespace My_namespace
                     key = command[j+1];
                 }
             }
-        }
-
-        void isValidCommand()
-        {
-            if(
-                !isKeyFound                                                || //Key not found
-                !isFileFound                                               || //Input file not found
-                (isEncrypt && isDecrypt)                                   || //Both encryption and decryption
-                (isEncrypt && isDecompress)                                || //Both encryption and decompression
-                (isCompress && isDecompress)                               || ////Both compression and decompression
-                (isCompress && isDecrypt)                                  || //Both compression and decryption
-                (!isEncrypt && !isDecrypt && !isCompress && !isDecompress) || //None operational parameter found
-                false
-            )
-                throw Invalid_Arguments;
+            isValidCommand();
         }
     };
 }
